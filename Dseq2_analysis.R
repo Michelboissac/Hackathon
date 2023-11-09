@@ -62,6 +62,7 @@ dds$Staphylococcus_aureus <- relevel(dds$Staphylococcus_aureus, ref = "untreated
 # Exécuter DEsq
 dds <- DESeq(dds)
 res <- results(dds)
+res05 <-results(dds, alpha = 0.05)
 # Explore results
 summary(res)
 # MA plot
