@@ -18,8 +18,12 @@ library("ggpubr")
 
 
 #1#################Creation des tableau cts et coldata necessaire pour deseq2
-#dir = "/home/kngadi/Documents/outputfeaturecounts_inputDeseq2(-s 1)/"
-#setwd(dir = dir)
+
+
+
+
+dir = "/home/kngadi/Documents/outputfeaturecounts_inputDeseq2(-s 1)/"
+setwd(dir = dir)
 
 count_matrix <- function(){
   #set working direcroty 
@@ -47,12 +51,12 @@ Deseq2_object <- function(cts, thrsd){
   # Le facteur de design
   smple_trimmed <- colnames(cts)
   sample_infos = data.frame(annot=smple_trimmed,
-                            Staphylococcus_aureus=as.factor(c( "treated", 
-                                                               "treated", 
-                                                               "treated", 
-                                                               "untreated",
-                                                               "untreated", 
-                                                               "untreated")),
+                            Staphylococcus_aureus=as.factor(c( "control", 
+                                                               "control", 
+                                                               "control", 
+                                                               "persistants",
+                                                               "persistants", 
+                                                               "persistants")),
                             row.names = 1
                           ) 
   cts <- na.omit(cts)
@@ -60,7 +64,7 @@ Deseq2_object <- function(cts, thrsd){
                                 colData = sample_infos,
                                 design = ~ Staphylococcus_aureus
   )
-  dds$Staphylococcus_aureus <- relevel(dds$Staphylococcus_aureus, ref = "untreated")
+  dds$Staphylococcus_aureus <- relevel(dds$Staphylococcus_aureus, ref = "control")
   # Exécuter DEsq
   dds <- DESeq(dds)
   #Explorer les résultats
@@ -69,6 +73,24 @@ Deseq2_object <- function(cts, thrsd){
   
 }
 
+#Application
+cts <- count_matrix()
+dsq_objt <- Deseq2_object(cts = cts, thrsd = 0.05)
+
+# gènes impliqués dans la tradutions
+trnsl_genid = read.csv(file = "trnslated_genes.csv") 
+trnsl_genid = paste0('gene-', trnsl_genid$geneid)
+trnsl_cts = cts[c(trnsl_genid),]
+out_trnsl <- Deseq2_object(cts = trnsl_cts, thrsd = 0.05)
+dsq_objt_trnslated <- Deseq2_object(cts = trnsl_cts, thrsd = 0.05)
+
+png(file = "plotMA.png", width = 800, height = 700)
+plotMA(dsq_objt_trnslated$res, alpha=0.05, colNonSig="black", colSig="red")
+dev.off()
+
+
+#############################
+res <- dsq_objt$res
 dds <- dsq_objt$dds
 res<- dsq_objt$res
   # Plot Ma-plot
