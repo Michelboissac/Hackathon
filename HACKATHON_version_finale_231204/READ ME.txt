@@ -1,0 +1,33 @@
+
+
+	installation de nextflow :
+	# yes | conda install -c bioconda nextflow=23.10.0
+
+
+
+1)  bash RUN.sh 
+
+
+
+	-"RUN.sh" va installer sra-toolkit, 
+	puis telecharger les 6 fichiers fastq , 
+	ainsi que "reference.fasta" et "reference.gff"
+
+	puis va lancer le script nextflow 
+	-"hackathon.nf"
+
+	-"nextflow.config" permet d'utiliser les containers.
+
+
+
+	les sorties sont 
+
+	-"output_dir1"  : contenant les 6 fichiers txt sortant de featurecounts 
+	-"output_dir2"  : contenant les plots de sorties de deseq2
+	
+
+
+-Le repertoire "script_Rversion2" contient une version du script R avec des plots plus travaillés
+que nous n'avons pas pu implementer dans hackathon.nf
+	
+
